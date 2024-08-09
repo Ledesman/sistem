@@ -1,7 +1,7 @@
 
 const db = require('../DB/mysq.js');
 
-const TABLA = 'clientes';
+const TABLA = 'usuarios';
 
 function todos() {
     return db.todos(TABLA);
