@@ -2,6 +2,7 @@
 const db = require('../DB/mysq.js');
 
 const TABLA = 'auth';
+const bcrypt = require('bcrypt')
 
 /* function todos() {
     return db.todos(TABLA);
@@ -9,7 +10,7 @@ const TABLA = 'auth';
 function uno(id) {
     return db.uno(TABLA,id);
 } */
-function agregar(data) {
+async function agregar(data) {
     const authData ={
         id: data.id,
     }
@@ -17,7 +18,7 @@ function agregar(data) {
         authData.usuario = data.usuario
     }
     if (data.password) {
-        authData.password = data.password
+        authData.password = await bcrypt.hash(data.password.toString(), 5); 
     }
     return db.agregar(TABLA, authData)
 }
