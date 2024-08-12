@@ -4,12 +4,23 @@ const db = require('../DB/mysq.js');
 const TABLA = 'auth';
 const bcrypt = require('bcrypt')
 
+const auth = require('../../src/authToken/index.js')
 /* function todos() {
     return db.todos(TABLA);
-}
-function uno(id) {
-    return db.uno(TABLA,id);
-} */
+}*/
+async function login(usuario, password) {
+    const data = await db.query(TABLA, {usuario: usuario});
+
+    return bcrypt.compare(password, data.password)
+    .then(resultado => {
+        if (resultado === true) {
+            //Generear un token
+            return auth.asignarToken({...data})
+        }else {
+            throw new Error('Informacion Invalida');
+        }
+    })
+} 
 async function agregar(data) {
     const authData ={
         id: data.id,
@@ -29,5 +40,7 @@ function eliminar(body) {
 module.exports = {
     
     eliminar,
-    agregar
+    agregar,
+    login,
+
 }
